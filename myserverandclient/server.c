@@ -9,20 +9,22 @@
 #define SER_PORT 1200
 int main()
 {
+    int port = 50000;
     int a, sersock, newsock, n;
     char str[25], str2[25];
-    struct sockaddr_in seraddr;
-    struct sockaddr_in cliinfo;
-    socklen_t csize = sizeof(cliinfo);
-    seraddr.sin_family = AF_INET;
-    seraddr.sin_port = htons(SER_PORT);
-    seraddr.sin_addr.s_addr = INADDR_ANY;
+    char buffer[1024];
+    struct sockaddr_in ServerAddress;
+    struct sockaddr_in CliInfo;
+    socklen_t Csize = sizeof(CliInfo);
+    ServerAddress.sin_family = AF_INET;
+    ServerAddress.sin_port = port;
+    ServerAddress.sin_addr.s_addr = INADDR_ANY;
     if ((sersock = socket(AF_INET, SOCK_STREAM, 0)) < 0)
     {
         perror("\n socket");
         exit(1);
     }
-    if (bind(sersock, (struct sockaddr *)&seraddr, sizeof(seraddr)) < 0)
+    if (bind(sersock, (struct sockaddr *)&ServerAddress, sizeof(ServerAddress)) < 0)
     {
         perror("\nBIND");
         exit(1);
@@ -31,14 +33,15 @@ int main()
     {
         perror("\n LISTEN");
     }
-    if ((newsock = accept(sersock, (struct sockaddr *)&cliinfo, &csize)) < 0)
+    printf("Listening...");
+    if ((newsock = accept(sersock, (struct sockaddr *)&CliInfo, &Csize)) < 0)
     {
         perror("\n ACCEPT");
         exit(1);
     }
     else
-        printf("\n now connected to %s\n", inet_ntoa(cliinfo.sin_addr));
-    read(newsock, str, sizeof(str));
+        printf("\n now connected to %s\n", inet_ntoa(CliInfo.sin_addr));
+    recv(newsock, str, sizeof(str),0);
     do
     {
         printf("\n client msg:%s", str);

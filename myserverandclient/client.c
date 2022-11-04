@@ -9,10 +9,11 @@
 #define SER_PORT 1200
 int main(int count, char *arg[])
 {
+    int port =50000;
     int a, clisock;
     char str[20], str2[20];
     struct sockaddr_in cliaddr;
-    cliaddr.sin_port = htons(SER_PORT);
+    cliaddr.sin_port = port;
     cliaddr.sin_family = AF_INET;
     cliaddr.sin_addr.s_addr = INADDR_ANY;
     clisock = socket(AF_INET, SOCK_STREAM, 0);
@@ -26,7 +27,7 @@ int main(int count, char *arg[])
         perror("\n CONNECT");
         exit(0);
     }
-    printf("\nclient connected to %s", arg[1]);
+    printf("\nclient connected to %s", gethostid(),"here");
     printf("\nCLIENT");
     scanf("%s", &str);
     if (write(clisock, str, sizeof(str)) < 0)
